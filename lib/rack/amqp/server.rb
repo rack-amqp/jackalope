@@ -1,3 +1,4 @@
+require 'pry'
 module Rack
   module AMQP
     class Server
@@ -16,20 +17,34 @@ module Rack
         ::AMQP.start(host: 'localhost') do |client, open_ok|
           chan = ::AMQP::Channel.new(client)
 
-          chan.queue("test.simple", auto_delete: true).subscribe do |payload|
+          chan.queue("test.simple", auto_delete: true).subscribe do |metadata, payload|
+            puts "Received meta: #{metadata.inspect}"
             puts "Received message: #{payload.inspect}"
-            response = handle_request payload
-            chan.direct("").publish(response, routing_key: "test.simple.reply")
+            #binding.pry
+            response = handle_request metadata, payload
+
+            message_id = metadata.message_id
+            reply_to = metadata.reply_to
+            chan.direct("").publish(response, 
+                                    routing_key: reply_to,
+                                    correlation_id: message_id
+                                   )
           end
 
           puts "go go go"
         end
       end
 
-      def handle_request(uri)
-        parts = uri.split(/\?/)
+      def handle_request(meta, body)
+        headers = meta.headers
+        http_method = meta.type
+        user_agent = meta.app_id
+        path = headers['path']
+
+        parts = path.split(/\?/)
         uri = parts[0]
         query = parts[1] || ""
+
         env = ENV.to_hash
         env.update({
           "rack.version" => Rack::VERSION,
@@ -42,9 +57,9 @@ module Rack
 
           "rack.url_scheme" => ["yes", "on", "1"].include?(ENV["HTTPS"]) ? "https" : "http",
 
-          'REQUEST_METHOD' => 'GET',
+          'REQUEST_METHOD' => http_method,
           'SERVER_NAME' => 'howdy',
-          'SERVER_PORT' => '8080',
+          'SERVER_PORT' => '80',
           'PATH_INFO' => uri,
           'QUERY_STRING' => query,
           'HTTP_VERSION' => '1.1',

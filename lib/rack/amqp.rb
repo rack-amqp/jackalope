@@ -7,7 +7,7 @@ require 'rack/amqp/version'
 require 'rack/amqp/server'
 
 module Rack
-  module Amqp
+  module AMQP
     # Your code goes here...
   end
 end
