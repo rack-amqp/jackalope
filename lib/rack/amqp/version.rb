@@ -1,5 +1,5 @@
 module Rack
-  module Amqp
+  module AMQP
     VERSION = "0.0.1"
   end
 end

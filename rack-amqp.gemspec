@@ -5,7 +5,7 @@ require 'rack/amqp/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "rack-amqp"
-  spec.version       = Rack::Amqp::VERSION
+  spec.version       = Rack::AMQP::VERSION
   spec.authors       = ["Joshua Szmajda"]
   spec.email         = ["josh@optoro.com"]
   spec.description   = %q{amqp}

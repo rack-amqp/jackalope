@@ -7,10 +7,15 @@ module Rack
         new(options).start
       end
 
-      attr_reader :options
+      attr_reader :options, :debug
 
       def initialize(options)
         @options = options
+        @debug = options[:debug]
+      end
+
+      def server_agent
+        "raqup-#{Rack::AMQP::VERSION}"
       end
 
       def start
@@ -18,27 +23,42 @@ module Rack
           chan = ::AMQP::Channel.new(client)
 
           chan.queue("test.simple", auto_delete: true).subscribe do |metadata, payload|
-            puts "Received meta: #{metadata.inspect}"
-            puts "Received message: #{payload.inspect}"
+            if debug
+              puts "Received meta: #{metadata.inspect}"
+              puts "Received message: #{payload.inspect}"
+            end
             #binding.pry
-            response = handle_request metadata, payload
+            response, headers = handle_request(metadata, payload)
 
             message_id = metadata.message_id
             reply_to = metadata.reply_to
-            chan.direct("").publish(response, 
-                                    routing_key: reply_to,
-                                    correlation_id: message_id
-                                   )
+
+            amqp_headers = {
+              routing_key: reply_to,
+              correlation_id: message_id,
+              type: 'REPLY',
+              app_id: server_agent,
+              timestamp: Time.now.to_i,
+              headers: headers
+            }
+            if type = headers['Content-Type']
+              amqp_headers[:content_type] = type
+            end
+            if enc = headers['Content-Encoding']
+              amqp_headers[:content_encoding] = enc
+            end
+
+            chan.direct("").publish(response, amqp_headers)
           end
 
-          puts "go go go"
+          puts "#{server_agent} running"
         end
       end
 
       def handle_request(meta, body)
         headers = meta.headers
         http_method = meta.type
-        user_agent = meta.app_id
+        #user_agent = meta.app_id
         path = headers['path']
 
         parts = path.split(/\?/)
@@ -66,13 +86,19 @@ module Rack
           'REQUEST_PATH' => uri,
         })
         response_code, headers, body = app.call(env)
-        response = []
-        response << "Response code: #{response_code}"
-        response << "Headers: #{headers.inspect}"
-        response << "Body Follows:"
-        body.each{|chunk| response << chunk }
+
+        headers.merge!(
+          'X-AMQP-HTTP-Status' => response_code
+        )
+
+        body_chunks = []
+        body.each do |chunk| 
+          puts "chunk: #{chunk.inspect}"
+          body_chunks << chunk
+        end
         body.close
-        response.join("\n")
+
+        [body_chunks.join, headers]
       end
 
       private
@@ -84,7 +110,7 @@ module Rack
       def construct_app rackup_file_name
         raw = ::File.read(rackup_file_name)
         app = eval("Rack::Builder.new {( #{raw} )}.to_app")
-        racked_app = Rack::Builder.new do
+        Rack::Builder.new do
           use Rack::ContentLength
           use Rack::Chunked
           use Rack::CommonLogger, $stderr
