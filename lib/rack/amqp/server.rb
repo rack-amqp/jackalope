@@ -93,7 +93,8 @@ module Rack
 
         body_chunks = []
         body.each do |chunk| 
-          puts "chunk: #{chunk.inspect}"
+          #puts "chunk: #{chunk.inspect}"
+          #binding.pry
           body_chunks << chunk
         end
         body.close
@@ -112,7 +113,8 @@ module Rack
         app = eval("Rack::Builder.new {( #{raw} )}.to_app")
         Rack::Builder.new do
           use Rack::ContentLength
-          use Rack::Chunked
+          # use Rack::Chunked TODO Maybe eventually
+          use Rack::ShowExceptions
           use Rack::CommonLogger, $stderr
           run app
         end.to_app
