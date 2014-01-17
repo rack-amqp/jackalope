@@ -56,15 +56,37 @@ module Rack
       end
 
       def handle_request(meta, body)
-        headers = meta.headers
+        headers     = meta.headers
         http_method = meta.type
-        #user_agent = meta.app_id
-        path = headers['path']
+        path        = headers['path']
 
         parts = path.split(/\?/)
-        uri = parts[0]
+        uri   = parts[0]
         query = parts[1] || ""
 
+        env = default_env
+        env.update({
+          'REQUEST_METHOD' => http_method,
+          'PATH_INFO' => uri,
+          'QUERY_STRING' => query,
+          'REQUEST_PATH' => uri,
+        })
+
+        response_code, headers, body = app.call(env)
+
+        headers.merge!('X-AMQP-HTTP-Status' => response_code)
+
+        body_chunks = []
+        body.each { |chunk| body_chunks << chunk }
+        body.close
+
+        [body_chunks.join, headers]
+      end
+
+      private
+
+      def default_env
+        @default_env ||= begin
         env = ENV.to_hash
         env.update({
           "rack.version" => Rack::VERSION,
@@ -77,32 +99,12 @@ module Rack
 
           "rack.url_scheme" => ["yes", "on", "1"].include?(ENV["HTTPS"]) ? "https" : "http",
 
-          'REQUEST_METHOD' => http_method,
           'SERVER_NAME' => 'howdy',
           'SERVER_PORT' => '80',
-          'PATH_INFO' => uri,
-          'QUERY_STRING' => query,
           'HTTP_VERSION' => '1.1',
-          'REQUEST_PATH' => uri,
         })
-        response_code, headers, body = app.call(env)
-
-        headers.merge!(
-          'X-AMQP-HTTP-Status' => response_code
-        )
-
-        body_chunks = []
-        body.each do |chunk| 
-          #puts "chunk: #{chunk.inspect}"
-          #binding.pry
-          body_chunks << chunk
-        end
-        body.close
-
-        [body_chunks.join, headers]
+                         end
       end
-
-      private
 
       def app
         @app ||= construct_app(options[:rackup_file])
