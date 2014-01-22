@@ -1,6 +1,7 @@
 # Rack::Amqp
 
-TODO: Write a gem description
+Server to run your rack (rails) application using AMQP as the transport
+protocol.
 
 ## Installation
 
@@ -18,7 +19,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+rabbicorn <rackup file>
+
+for rails app:
+
+rabbicorn config.ru
 
 ## Contributing
 
