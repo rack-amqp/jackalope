@@ -1,4 +1,3 @@
-require 'pry'
 module Rack
   module AMQP
     class Server
@@ -27,7 +26,6 @@ module Rack
               puts "Received meta: #{metadata.inspect}"
               puts "Received message: #{payload.inspect}"
             end
-            #binding.pry
             response, headers = handle_request(metadata, payload)
 
             message_id = metadata.message_id
