@@ -19,11 +19,11 @@ Or install it yourself as:
 
 ## Usage
 
-rabbicorn <rackup file>
+    rabbicorn <rackup file>
 
 for rails app:
 
-rabbicorn config.ru
+    rabbicorn config.ru
 
 ## Contributing
 
