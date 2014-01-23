@@ -70,6 +70,7 @@ module Rack
           'REQUEST_PATH' => uri,
         })
 
+        #puts "call env: #{env.inspect}"
         response_code, headers, body = app.call(env)
 
         headers.merge!('X-AMQP-HTTP-Status' => response_code)
@@ -84,23 +85,23 @@ module Rack
       private
 
       def default_env
-        @default_env ||= begin
-        env = ENV.to_hash
-        env.update({
-          "rack.version" => Rack::VERSION,
-          "rack.input" => Rack::RewindableInput.new($stdin),
-          "rack.errors" => $stderr,
+        @default_env = begin
+                           env = ENV.to_hash
+                           env.update({
+                             "rack.version" => Rack::VERSION,
+                             "rack.input" => Rack::RewindableInput.new($stdin),
+                             "rack.errors" => $stderr,
 
-          "rack.multithread" => false,
-          "rack.multiprocess" => true,
-          "rack.run_once" => true,
+                             "rack.multithread" => false,
+                             "rack.multiprocess" => true,
+                             "rack.run_once" => false,
 
-          "rack.url_scheme" => ["yes", "on", "1"].include?(ENV["HTTPS"]) ? "https" : "http",
+                             "rack.url_scheme" => ["yes", "on", "1"].include?(ENV["HTTPS"]) ? "https" : "http",
 
-          'SERVER_NAME' => 'howdy',
-          'SERVER_PORT' => '80',
-          'HTTP_VERSION' => '1.1',
-        })
+                             'SERVER_NAME' => 'howdy',
+                             'SERVER_PORT' => '80',
+                             'HTTP_VERSION' => '1.1',
+                           })
                          end
       end
 
