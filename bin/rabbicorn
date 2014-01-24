@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
 require "rack/amqp"
-Rack::AMQP::Server.start rackup_file: File.absolute_path(ARGV[0])
+Rack::AMQP::Server.start debug: true, rackup_file: File.absolute_path(ARGV[0])

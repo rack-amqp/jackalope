@@ -14,7 +14,7 @@ module Rack
       end
 
       def server_agent
-        "raqup-#{Rack::AMQP::VERSION}"
+        "rabbicorn-#{Rack::AMQP::VERSION}"
       end
 
       def start
@@ -70,7 +70,15 @@ module Rack
           'REQUEST_PATH' => uri,
         })
 
-        #puts "call env: #{env.inspect}"
+        # TODO what about other methods?
+        if http_method == "POST"
+          env.update({
+            "rack.input" => StringIO.new(body)
+          })
+        end
+
+        # puts "call env: #{env.inspect}"
+
         response_code, headers, body = app.call(env)
 
         headers.merge!('X-AMQP-HTTP-Status' => response_code)
