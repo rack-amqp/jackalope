@@ -68,14 +68,8 @@ module Rack
           'PATH_INFO' => uri,
           'QUERY_STRING' => query,
           'REQUEST_PATH' => uri,
+          "rack.input" => StringIO.new(body)
         })
-
-        # TODO what about other methods?
-        if http_method == "POST"
-          env.update({
-            "rack.input" => StringIO.new(body)
-          })
-        end
 
         # puts "call env: #{env.inspect}"
 
