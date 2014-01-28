@@ -68,8 +68,8 @@ module Rack
           'PATH_INFO' => uri,
           'QUERY_STRING' => query,
           'REQUEST_PATH' => uri,
-          'CONTENT_LENGH' => body.length,
-          'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
+          'CONTENT_LENGH' => headers['Content-Length'],
+          'CONTENT_TYPE' => headers['Content-Type'],
           "rack.input" => StringIO.new(body)
         })
 
