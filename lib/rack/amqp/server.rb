@@ -1,3 +1,5 @@
+require "rack/amqp/configuration"
+
 module Rack
   module AMQP
     class Server
@@ -10,6 +12,10 @@ module Rack
 
       def initialize(options)
         @options = options
+        Rack::AMQP.configure do |config|
+          config.rabbit_host = options[:rabbitmq]
+          config.queue_name = options[:queue_name]
+        end
         @debug = options[:debug]
       end
 
@@ -17,11 +23,15 @@ module Rack
         "rabbicorn-#{Rack::AMQP::VERSION}"
       end
 
+      def configuration
+        Rack::AMQP.configuration
+      end
+
       def start
-        ::AMQP.start(host: 'localhost') do |client, open_ok|
+        ::AMQP.start(host: configuration.rabbit_host) do |client, open_ok|
           chan = ::AMQP::Channel.new(client)
 
-          chan.queue("test.simple", auto_delete: true).subscribe do |metadata, payload|
+          chan.queue(configuration.queue_name, auto_delete: true).subscribe do |metadata, payload|
             if debug
               puts "Received meta: #{metadata.inspect}"
               puts "Received message: #{payload.inspect}"
