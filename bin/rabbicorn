@@ -1,4 +1,41 @@
 #!/usr/bin/env ruby
 
 require "rack/amqp"
-Rack::AMQP::Server.start rackup_file: File.absolute_path(ARGV[0])
+require "optparse"
+
+options = {
+  rabbitmq: 'localhost',
+  queue_name: 'default.queue',
+  debug: false,
+}
+
+OptionParser.new do |opts|
+  cmd = File.basename($0)
+  opts.banner = "Usage: #{cmd} [options] <rackup file>"
+
+  opts.on("-rHOST", "--rabbitmq HOST", "hostname of the rabbitmq server") do |host|
+    options[:rabbitmq] = host
+  end
+
+  opts.on("-qQUEUE", "--queue QUEUE", "queue name that this app subscribes to") do |queue|
+    options[:queue_name] = queue
+  end
+
+  opts.on("-d", "--debug", "turn on some debugging messages") do
+    options[:debug] = true
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts.to_s
+    exit
+  end
+
+  opts.on_tail("-v", "--version", "Show version") do
+    puts "#{cmd} v#{Rack::AMQP::VERSION}"
+    exit
+  end
+
+  opts.parse! ARGV
+end
+
+Rack::AMQP::Server.start options.merge(rackup_file: File.absolute_path(ARGV[0]))
