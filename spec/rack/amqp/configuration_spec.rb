@@ -6,20 +6,20 @@ describe Rack::AMQP::Configuration do
     Rack::AMQP.configure do |c|
       x = c
     end
-    refute_nil x
+    expect(x).to_not be_nil
   end
 
   it 'allows configuration querying' do
-    refute_nil Rack::AMQP.configuration
+    expect(Rack::AMQP.configuration).to_not be_nil
   end
 
   it 'accepts the rabbit host' do
     Rack::AMQP.configure { |c|      c.rabbit_host = 'foo' }
-    Rack::AMQP.configuration.rabbit_host.must_equal 'foo'
+    expect(Rack::AMQP.configuration.rabbit_host).to eql('foo')
   end
 
   it 'accepts the queue name' do
     Rack::AMQP.configure { |c|      c.queue_name = 'bar' }
-    Rack::AMQP.configuration.queue_name.must_equal 'bar'
+    expect(Rack::AMQP.configuration.queue_name).to eql('bar')
   end
 end
