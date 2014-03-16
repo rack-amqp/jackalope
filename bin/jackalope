@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require "rack/amqp"
-require "optparse"
+require 'rack/amqp'
+require 'optparse'
 
 options = {
   rabbitmq: 'localhost',
