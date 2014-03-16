@@ -1,4 +1,8 @@
-# Rack::Amqp
+[![Build Status](https://travis-ci.org/rack-amqp/jackalope.png?branch=master)](https://travis-ci.org/rack-amqp/jackalope)
+
+# Jackalope
+
+![Jackalope](http://beerpulse.com/wp-content/uploads/2010/11/jackalope-brewing.png)
 
 Server to run your rack (rails) application using AMQP as the transport
 protocol.
