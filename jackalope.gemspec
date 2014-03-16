@@ -4,12 +4,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'rack/amqp/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "rack-amqp"
+  spec.name          = "jackalope"
   spec.version       = Rack::AMQP::VERSION
   spec.authors       = ["Joshua Szmajda"]
   spec.email         = ["josh@optoro.com"]
-  spec.description   = %q{amqp}
-  spec.summary       = %q{amqp}
+  spec.description   = %q{Server for Rack applications for communication via AMQP}
+  spec.summary       = %q{Server for Rack applications for communication via AMQP}
   spec.homepage      = ""
   spec.license       = "MIT"
 

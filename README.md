@@ -7,7 +7,7 @@ protocol.
 
 Add this line to your application's Gemfile:
 
-    gem 'rack-amqp'
+    gem 'jackalope'
 
 And then execute:
 
@@ -15,15 +15,15 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install rack-amqp
+    $ gem install jackalope
 
 ## Usage
 
-    rabbicorn <rackup file>
+    jackalope <rackup file>
 
 for rails app:
 
-    rabbicorn config.ru
+    jackalope config.ru
 
 ## Contributing
 
