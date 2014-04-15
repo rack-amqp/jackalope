@@ -13,4 +13,12 @@ describe Rack::AMQP::Server do
   describe '#default_env' do
     it 'looks like HTTP enough'
   end
+
+  describe 'command line' do
+    it 'handles when the user forgets to specity the rackup file'
+  end
+
+  describe 'client failures' do
+    it 'handles when the client forgets to specify the http_method'
+  end
 end
