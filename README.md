@@ -4,8 +4,8 @@
 
 ![Jackalope](http://beerpulse.com/wp-content/uploads/2010/11/jackalope-brewing.png)
 
-Server to run your rack (rails) application using AMQP as the transport
-protocol.
+AMQP-HTTP compliant Server to run your rack (rails) application using
+AMQP as the transport protocol.
 
 ## Installation
 
@@ -23,11 +23,11 @@ Or install it yourself as:
 
 ## Usage
 
-    jackalope <rackup file>
+    jackalope -q <queue name> <rackup file>
 
 for rails app:
 
-    jackalope config.ru
+    jackalope -q my.queue config.ru
 
 ## Contributing
 

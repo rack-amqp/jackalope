@@ -6,11 +6,11 @@ require 'rack/amqp/version'
 Gem::Specification.new do |spec|
   spec.name          = "jackalope"
   spec.version       = Rack::AMQP::VERSION
-  spec.authors       = ["Joshua Szmajda"]
+  spec.authors       = ["Joshua Szmajda", "John Nestoriak"]
   spec.email         = ["josh@optoro.com"]
-  spec.description   = %q{Server for Rack applications for communication via AMQP}
-  spec.summary       = %q{Server for Rack applications for communication via AMQP}
-  spec.homepage      = ""
+  spec.description   = %q{AMQP-HTTP compliant Server for Rack applications}
+  spec.summary       = %q{AMQP-HTTP compliant Server for Rack applications}
+  spec.homepage      = "http://github.com/rack-amqp/jackalope"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
