@@ -20,7 +20,7 @@ module Rack
       end
 
       def server_agent
-        "rabbicorn-#{Rack::AMQP::VERSION}"
+        "jackalope-#{Rack::AMQP::VERSION}"
       end
 
       def configuration
