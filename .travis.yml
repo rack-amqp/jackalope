@@ -5,6 +5,6 @@ rvm:
   - 1.9.3
   - 1.9.2
   - jruby-19mode # JRuby in 1.9 mode
-  - ruby-head
+  # some problem with eventmachine for now.. - ruby-head
   - jruby-head
-  - rbx
+  # not working on Travis right now - rbx
