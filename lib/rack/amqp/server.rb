@@ -11,12 +11,14 @@ module Rack
       attr_reader :options, :debug
 
       def initialize(options)
-        @options = options
+        @options = options.dup
+        @debug = options.delete(:debug)
+
         Rack::AMQP.configure do |config|
-          config.rabbit_host = options[:rabbitmq]
-          config.queue_name = options[:queue_name]
+          options.each do |key, value|
+            config.instance_variable_set("@#{key}", value)
+          end
         end
-        @debug = options[:debug]
       end
 
       def server_agent
@@ -28,7 +30,7 @@ module Rack
       end
 
       def start
-        ::AMQP.start(host: configuration.rabbit_host) do |client, open_ok|
+        ::AMQP.start(configuration.connection_parameters) do |client, open_ok|
           chan = ::AMQP::Channel.new(client)
 
           chan.queue(configuration.queue_name, auto_delete: true).subscribe do |metadata, payload|
@@ -134,7 +136,6 @@ module Rack
           run app
         end.to_app
       end
-
     end
   end
 end

@@ -6,20 +6,26 @@ describe Rack::AMQP::Configuration do
     Rack::AMQP.configure do |c|
       x = c
     end
-    expect(x).to_not be_nil
+    expect(x).to be_kind_of(Rack::AMQP::Configuration)
   end
 
   it 'allows configuration querying' do
     expect(Rack::AMQP.configuration).to_not be_nil
   end
 
-  it 'accepts the rabbit host' do
-    Rack::AMQP.configure { |c|      c.rabbit_host = 'foo' }
-    expect(Rack::AMQP.configuration.rabbit_host).to eql('foo')
-  end
-
-  it 'accepts the queue name' do
-    Rack::AMQP.configure { |c|      c.queue_name = 'bar' }
-    expect(Rack::AMQP.configuration.queue_name).to eql('bar')
+  [
+    :rabbit_host,
+    :queue_name,
+    :tls,
+    :cert_chain_file,
+    :private_key_file,
+    :port,
+    :username,
+    :password
+  ].each do |attr|
+    it "accepts the #{attr} attribute" do
+      Rack::AMQP.configure { |c| c.instance_variable_set("@#{attr}", 'foo') }
+      expect(Rack::AMQP.configuration.instance_variable_get("@#{attr}")).to eql('foo')
+    end
   end
 end
