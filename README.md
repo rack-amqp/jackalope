@@ -34,7 +34,7 @@ all parameters:
 | Parameters    |                     Description                    | Default Value |
 |---------------|:--------------------------------------------------:|--------------:|
 | -q, --queue   | rabbitmq queue name for application communication  | default.queue |
-| -r, --host    |         rabbitmq server host or IP address         |     localhost |
+| -h, --host    |         rabbitmq server host or IP address         |     localhost |
 | -p, --port    |                rabbitmq server port                |          5672 |
 | -u, --user    | username to use for the rabbitmq server connection |         guest |
 | -P, --pass    | password to use for the rabbitmq server connection |         guest |
