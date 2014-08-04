@@ -4,20 +4,48 @@ require 'rack/amqp'
 require 'optparse'
 
 options = {
-  rabbitmq: 'localhost',
+  rabbit_host: 'localhost',
   queue_name: 'default.queue',
+  port: 5672,
   debug: false,
+  tls: false,
+  username: 'guest',
+  password: 'guest'
 }
 
 OptionParser.new do |opts|
   cmd = File.basename($0)
   opts.banner = "Usage: #{cmd} [options] <rackup file>"
 
-  opts.on("-rHOST", "--rabbitmq HOST", "hostname of the rabbitmq server") do |host|
-    options[:rabbitmq] = host
+  opts.on("-hHOST", "--host HOST", "rabbitmq server host or IP address") do |host|
+    options[:rabbit_host] = host
   end
 
-  opts.on("-qQUEUE", "--queue QUEUE", "queue name that this app subscribes to") do |queue|
+  opts.on("-pPORT", "--port PORT", "rabbitmq server port") do |port|
+    options[:port] = port
+  end
+
+  opts.on("-uUSERNAME", "--user USERNAME", "username to user for thte rabbitmq server connection") do |user|
+    options[:username] = user
+  end
+
+  opts.on("-P PASSWORD", "--pass PASSWORD", "password to use for the rabbitmq server connection") do |pass|
+    options[:password] = pass
+  end
+
+  opts.on("-t", "--tls", "use TLS when connecting to the rabbitmq server") do |cert|
+    options[:tls] = true
+  end
+
+  opts.on("-cCERT", "--cert CERT", "path to client certificate for SSL connections") do |cert|
+    options[:cert_chain_file] = cert
+  end
+
+  opts.on("-kKEY", "--key KEY", "path to client private key for SSL connections") do |key|
+    options[:private_key_file] = key
+  end
+
+  opts.on("-qQUEUE", "--queue QUEUE", "rabbitmq queue name for application communication") do |queue|
     options[:queue_name] = queue
   end
 
