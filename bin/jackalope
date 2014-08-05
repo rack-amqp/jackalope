@@ -17,8 +17,8 @@ OptionParser.new do |opts|
   cmd = File.basename($0)
   opts.banner = "Usage: #{cmd} [options] <rackup file>"
 
-  opts.on("-hHOST", "--host HOST", "rabbitmq server host or IP address") do |host|
-    options[:rabbit_host] = host
+  opts.on("-sSERVER", "--server SERVER", "rabbitmq server host or IP address") do |server|
+    options[:rabbit_host] = server
   end
 
   opts.on("-pPORT", "--port PORT", "rabbitmq server port") do |port|
