@@ -10,7 +10,8 @@ options = {
   debug: false,
   tls: false,
   username: 'guest',
-  password: 'guest'
+  password: 'guest',
+  heartbeat: 5
 }
 
 OptionParser.new do |opts|
@@ -47,6 +48,10 @@ OptionParser.new do |opts|
 
   opts.on("-qQUEUE", "--queue QUEUE", "rabbitmq queue name for application communication") do |queue|
     options[:queue_name] = queue
+  end
+
+  opts.on("-hHEARTBEAT", "--heartbeat HEARTBEAT", "heartbeat to use when connecting to the rabbitmq-server.") do |heartbeat|
+    options[:heartbeat] = heartbeat
   end
 
   opts.on("-d", "--debug", "turn on some debugging messages") do
