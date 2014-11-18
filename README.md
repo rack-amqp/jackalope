@@ -41,7 +41,7 @@ all parameters:
 | -t, --tls       |   use TLS when connecting to the rabbitmq server    |         false |
 | -c, --cert      | path to the client certificate (pem format)         |           nil |
 | -k, --key       | path to the client private key (pem format)         |           nil |
-| -h, --heartbeat | heartbeat to use when connecting to rabbitmq server |           nil |
+| -h, --heartbeat | heartbeat to use when connecting to rabbitmq server |   5 (seconds) |
 | -d, --debug     |           turn on some debugging messages           |         false |
 | -h, --help      |                show the help dialog                 |           N/A |
 | -v, --version   |                  show the version                   |           N/A |
