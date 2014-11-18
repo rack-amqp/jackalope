@@ -31,19 +31,20 @@ for rails app:
 
 all parameters:
 
-| Parameters    |                     Description                    | Default Value |
-|---------------|:--------------------------------------------------:|--------------:|
-| -q, --queue   | rabbitmq queue name for application communication  | default.queue |
-| -s, --server  |         rabbitmq server host or IP address         |     localhost |
-| -p, --port    |                rabbitmq server port                |          5672 |
-| -u, --user    | username to use for the rabbitmq server connection |         guest |
-| -P, --pass    | password to use for the rabbitmq server connection |         guest |
-| -t, --tls     |   use TLS when connecting to the rabbitmq server   |         false |
-| -c, --cert    | path to the client certificate (pem format)        |           nil |
-| -k, --key     | path to the client private key (pem format)        |           nil |
-| -d, --debug   |           turn on some debugging messages          |         false |
-| -h, --help    |                show the help dialog                |           N/A |
-| -v, --version |                  show the version                  |           N/A |
+| Parameters      |                     Description                     | Default Value |
+|-----------------|:---------------------------------------------------:|--------------:|
+| -q, --queue     | rabbitmq queue name for application communication   | default.queue |
+| -s, --server    |         rabbitmq server host or IP address          |     localhost |
+| -p, --port      |                rabbitmq server port                 |          5672 |
+| -u, --user      | username to use for the rabbitmq server connection  |         guest |
+| -P, --pass      | password to use for the rabbitmq server connection  |         guest |
+| -t, --tls       |   use TLS when connecting to the rabbitmq server    |         false |
+| -c, --cert      | path to the client certificate (pem format)         |           nil |
+| -k, --key       | path to the client private key (pem format)         |           nil |
+| -h, --heartbeat | heartbeat to use when connecting to rabbitmq server |           nil |
+| -d, --debug     |           turn on some debugging messages           |         false |
+| -h, --help      |                show the help dialog                 |           N/A |
+| -v, --version   |                  show the version                   |           N/A |
 
 ## Contributing
 
