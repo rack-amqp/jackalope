@@ -51,7 +51,7 @@ OptionParser.new do |opts|
   end
 
   opts.on("-hHEARTBEAT", "--heartbeat HEARTBEAT", "heartbeat to use when connecting to the rabbitmq-server.") do |heartbeat|
-    options[:heartbeat] = heartbeat
+    options[:heartbeat] = heartbeat.to_i
   end
 
   opts.on("-d", "--debug", "turn on some debugging messages") do
