@@ -33,7 +33,8 @@ module Rack
         ::AMQP.start(configuration.connection_parameters) do |client, open_ok|
           chan = ::AMQP::Channel.new(client)
 
-          chan.queue(configuration.queue_name, auto_delete: true).subscribe do |metadata, payload|
+          
+          chan.queue(configuration.queue_name, durable: true).subscribe do |metadata, payload|
             if debug
               puts "Received meta: #{metadata.inspect}"
               puts "Received message: #{payload.inspect}"
