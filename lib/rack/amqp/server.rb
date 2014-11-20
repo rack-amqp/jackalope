@@ -31,36 +31,13 @@ module Rack
 
       def start
         ::AMQP.start(configuration.connection_parameters) do |client, open_ok|
-          chan = ::AMQP::Channel.new(client)
-
-          chan.queue(configuration.queue_name, auto_delete: true).subscribe do |metadata, payload|
-            if debug
-              puts "Received meta: #{metadata.inspect}"
-              puts "Received message: #{payload.inspect}"
-            end
-            response, headers = handle_request(metadata, payload)
-
-            message_id = metadata.message_id
-            reply_to = metadata.reply_to
-
-            amqp_headers = {
-              routing_key: reply_to,
-              correlation_id: message_id,
-              type: 'REPLY',
-              app_id: server_agent,
-              timestamp: Time.now.to_i,
-              headers: headers
-            }
-            if type = headers['Content-Type']
-              amqp_headers[:content_type] = type
-            end
-            if enc = headers['Content-Encoding']
-              amqp_headers[:content_encoding] = enc
-            end
-
-            chan.direct("").publish(response, amqp_headers)
+          client.on_tcp_connection_loss do |connection, _|
+            connection.reconnect(false, 10)
+            subscribe_to_queue(configuration.queue_name, client)
           end
 
+          subscribe_to_queue(configuration.queue_name, client)
+        
           puts "#{server_agent} running"
         end
       end
@@ -100,6 +77,38 @@ module Rack
 
       private
 
+      def subscribe_to_queue(name, session)
+        chan = ::AMQP::Channel.new(session)
+        chan.queue(name, durable: true).subscribe do |metadata, payload|
+          if debug
+            puts "Received meta: #{metadata.inspect}"
+            puts "Received message: #{payload.inspect}"
+          end
+          response, headers = handle_request(metadata, payload)
+
+          message_id = metadata.message_id
+          reply_to = metadata.reply_to
+
+          amqp_headers = {
+            routing_key: reply_to,
+            correlation_id: message_id,
+            type: 'REPLY',
+            app_id: server_agent,
+            timestamp: Time.now.to_i,
+            headers: headers
+          }
+          if type = headers['Content-Type']
+            amqp_headers[:content_type] = type
+          end
+          if enc = headers['Content-Encoding']
+            amqp_headers[:content_encoding] = enc
+          end
+
+          chan.direct("").publish(response, amqp_headers)
+        end
+      end
+      
+      
       def default_env
         @default_env = begin
                            env = ENV.to_hash
