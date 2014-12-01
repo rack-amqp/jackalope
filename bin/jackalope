@@ -23,7 +23,7 @@ OptionParser.new do |opts|
   end
 
   opts.on("-pPORT", "--port PORT", "rabbitmq server port") do |port|
-    options[:port] = port
+    options[:port] = port.to_i
   end
 
   opts.on("-uUSERNAME", "--user USERNAME", "username to user for thte rabbitmq server connection") do |user|
