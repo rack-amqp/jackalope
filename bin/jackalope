@@ -5,13 +5,14 @@ require 'optparse'
 
 options = {
   rabbit_host: 'localhost',
-  queue_name: 'default.queue',
-  port: 5672,
-  debug: false,
-  tls: false,
-  username: 'guest',
-  password: 'guest',
-  heartbeat: 5
+  queue_name:  'default.queue',
+  port:        5672,
+  debug:       false,
+  tls:         false,
+  username:    'guest',
+  password:    'guest',
+  heartbeat:   5,
+  prefetch:    1
 }
 
 OptionParser.new do |opts|
@@ -53,6 +54,11 @@ OptionParser.new do |opts|
   opts.on("-hHEARTBEAT", "--heartbeat HEARTBEAT", "heartbeat to use when connecting to the rabbitmq-server.") do |heartbeat|
     options[:heartbeat] = heartbeat.to_i
   end
+
+  opts.on("-rPREFETCH", "--prefetch PREFETCH", "number of messages to rcv w/o sending consumer ack") do |prefetch|
+    options[:prefetch] = prefetch.to_i
+  end
+
 
   opts.on("-d", "--debug", "turn on some debugging messages") do
     options[:debug] = true

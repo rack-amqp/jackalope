@@ -19,15 +19,17 @@ module Rack
       attr_accessor :username
       attr_accessor :password
       attr_accessor :heartbeat
+      attr_accessor :prefetch
 
       def connection_parameters
         params = {
-          host: rabbit_host || 'localhost',
-          port: port || 5672,
-          username: username || 'guest',
-          password: password || 'guest',
-          ssl: false,
-          heartbeat: heartbeat || 5
+          host:      rabbit_host || 'localhost',
+          port:      port        || 5672,
+          username:  username    || 'guest',
+          password:  password    || 'guest',
+          ssl:       false,
+          heartbeat: heartbeat   || 5,
+          prefetch:  prefetch    || 1
         }
 
         if tls
