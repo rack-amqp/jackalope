@@ -78,8 +78,11 @@ module Rack
       private
 
       def subscribe_to_queue(name, session)
-        chan = ::AMQP::Channel.new(session)
-        chan.queue(name, durable: true).subscribe do |metadata, payload|
+        chan  = ::AMQP::Channel.new(session)
+        chan.prefetch(configuration.prefetch)
+        queue = chan.queue(name, durable: true)
+
+        queue.subscribe(ack: true) do |metadata, payload|
           if debug
             puts "Received meta: #{metadata.inspect}"
             puts "Received message: #{payload.inspect}"
@@ -105,6 +108,8 @@ module Rack
           end
 
           chan.direct("").publish(response, amqp_headers)
+
+          metadata.ack
         end
       end
       
