@@ -44,7 +44,7 @@ module Rack
           end
 
           subscribe_to_queue(config.queue_name, client)
-        
+
           puts "#{server_agent} running"
         end
       end
@@ -58,7 +58,7 @@ module Rack
         uri   = parts[0]
         query = parts[1] || ""
 
-        env = default_env
+        env = default_env.merge(headers.dup)
         env.update({
           'REQUEST_METHOD' => http_method,
           'PATH_INFO' => uri,
@@ -122,7 +122,7 @@ module Rack
             metadata.ack
           end
         end
-      
+
         def default_env
           @default_env = begin
             env = ENV.to_hash
