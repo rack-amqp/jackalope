@@ -64,7 +64,7 @@ module Rack
           'PATH_INFO' => uri,
           'QUERY_STRING' => query,
           'REQUEST_PATH' => uri,
-          'CONTENT_LENGH' => headers['Content-Length'],
+          'CONTENT_LENGTH' => headers['Content-Length'],
           'CONTENT_TYPE' => headers['Content-Type'],
           "rack.input" => StringIO.new(body)
         })
