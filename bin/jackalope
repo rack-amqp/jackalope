@@ -3,17 +3,7 @@
 require 'rack/amqp'
 require 'optparse'
 
-options = {
-  rabbit_host: 'localhost',
-  queue_name:  'default.queue',
-  port:        5672,
-  debug:       false,
-  tls:         false,
-  username:    'guest',
-  password:    'guest',
-  heartbeat:   5,
-  prefetch:    1
-}
+options = {}
 
 OptionParser.new do |opts|
   cmd = File.basename($0)
@@ -24,14 +14,14 @@ OptionParser.new do |opts|
   end
 
   opts.on("-pPORT", "--port PORT", "rabbitmq server port") do |port|
-    options[:port] = port.to_i
+    options[:rabbit_port] = port.to_i
   end
 
-  opts.on("-uUSERNAME", "--user USERNAME", "username to user for thte rabbitmq server connection") do |user|
+  opts.on("-uUSERNAME", "--user USERNAME", "rabbitmq server username") do |user|
     options[:username] = user
   end
 
-  opts.on("-P PASSWORD", "--pass PASSWORD", "password to use for the rabbitmq server connection") do |pass|
+  opts.on("-P PASSWORD", "--pass PASSWORD", "rabbitmq server password") do |pass|
     options[:password] = pass
   end
 
@@ -49,6 +39,22 @@ OptionParser.new do |opts|
 
   opts.on("-qQUEUE", "--queue QUEUE", "rabbitmq queue name for application communication") do |queue|
     options[:queue_name] = queue
+  end
+  
+  opts.on("-D", "--daemonize", "run daemonized in the background (default: false)") do |daemonize|
+    options[:daemonize] = daemonize
+  end
+
+  opts.on("--pid PID", "pid file") do |pid|
+    options[:pid_file] = pid
+  end
+
+  opts.on("--log FILE", "log to file") do |file|
+    options[:stdout_file] = file
+  end
+
+  opts.on("--conf FILE", "configuration file") do |file|
+    options[:config] = file
   end
 
   opts.on("-hHEARTBEAT", "--heartbeat HEARTBEAT", "heartbeat to use when connecting to the rabbitmq-server.") do |heartbeat|
@@ -75,6 +81,10 @@ OptionParser.new do |opts|
   end
 
   opts.parse! ARGV
+end
+
+if conf_file = options.delete(:config)
+  require conf_file
 end
 
 Rack::AMQP::Server.start options.merge(rackup_file: File.absolute_path(ARGV[0]))

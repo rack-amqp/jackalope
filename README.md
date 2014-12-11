@@ -43,9 +43,26 @@ all parameters:
 | -k, --key       | path to the client private key (pem format)         |           nil |
 | -r, --prefetch  | number of messages to rcv w/o sending consumer ack  |             1 |
 | -h, --heartbeat | heartbeat to use when connecting to rabbitmq server |   5 (seconds) |
+| -D, --daemonize | run daemonized in the background                    |         false |
+| --pid           | pid file path                                       |           nil |
+| --log           | log file for stdout                                 |           nil |
+| --conf          | configuration file                                  |           nil |
 | -d, --debug     |           turn on some debugging messages           |         false |
 | -h, --help      |                show the help dialog                 |           N/A |
 | -v, --version   |                  show the version                   |           N/A |
+
+## Configuration file
+
+    Rack::AMQP.configure do |config|
+      # config.queue_name = 'default.queue'
+      # config.rabbit_host = 'localhost'
+      # config.rabbit_port = 5672
+      # config.username = 'guest'
+      # config.password = 'guest'
+      # config.pid_file = "#{File.dirname(__FILE__)}/../../tmp/pids/jackalope.pid"
+      # config.stdout_file = "#{File.dirname(__FILE__)}/../../log/jackalope.log"
+      # config.stderr_file = config.stdout_file
+    end
 
 ## Contributing
 
